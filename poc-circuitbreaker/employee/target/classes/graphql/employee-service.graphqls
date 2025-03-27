@@ -1,0 +1,15 @@
+type Employee {
+	id: ID!
+	name: String!
+	age: Int!
+	salary: Double!
+	company: String
+}
+
+type Query {
+	getAllEmployees: [Employee]
+}
+
+type Mutation {
+	saveEmployee(name: String!, age: Int!, salary: Double!, company: String!): Employee
+}
