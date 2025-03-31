@@ -24,7 +24,7 @@ public class EmployeeResolver {
 	
 	@MutationMapping
 	public Employee saveEmployee(@Argument String name, @Argument int age, 
-			@Argument double salary, @Argument String company) {
+			@Argument float salary, @Argument String company) {
 		
 		Employee employees = new Employee();
 		employees.setName(name);
@@ -33,5 +33,10 @@ public class EmployeeResolver {
 		employees.setCompany(company);
 		
 				return service.saveEmployee(employees);
+	}
+	
+	@QueryMapping
+	public Employee getEmployeeById(@Argument Long employeeId) {
+		return service.getEmployeeById(employeeId);
 	}
 }
