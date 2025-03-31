@@ -11,8 +11,11 @@ import com.ecms.employee.repository.EmployeeRepository;
 import com.ecms.employee.service.EmployeeService;
 
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.retry.annotation.Retry;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
+@Slf4j
 public class EmployeeServiceImpl implements EmployeeService {
 	
 	@Autowired
@@ -35,14 +38,17 @@ public class EmployeeServiceImpl implements EmployeeService {
 	
 
 	@Override
+	@Retry(name = "getEmployee", fallbackMethod = "getEmployeeFallback")
 	@CircuitBreaker(name = EMPLOYEE_SERVICEIMPL, fallbackMethod = "getEmployeeFallback")
 	public Employee getEmployeeById(Long id) {
 		// TODO Auto-generated method stub
+		log.info("Trying to fetch employee...");
 		return repo.findById(id).orElseThrow(() -> new EmployeeNotFoundException("Employee Not Found"));
 	}
 	
-	public Employee getEmployeeFallback(Long id, EmployeeNotFoundException e) {
-		System.out.println("getEmployeeFallback");
+	public Employee getEmployeeFallback(Long id, EmployeeNotFoundException exception) {
+//		System.out.println("Fallback triggered due to: " + exception.getMessage());
+		log.info("Fallback trigger due to: " + exception.getMessage());
 		return new Employee();
 	}
 }
