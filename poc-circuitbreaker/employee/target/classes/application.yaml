@@ -40,19 +40,8 @@ resilience4j.circuitbreaker:
         waitDurationInOpenState: 10s
         permittedNumberOfCallsInHalfOpenState: 3
         slidingWindowSize: 10
-        slidingWindowType: COUNT_BASED
         automaticTransitionFromOpenToHalfOpenEnabled: true
 
-#retry
-resilience4j.retry:
-  instances:
-    getEmployee:
-      maxAttempts: 5
-      waitDuration: 2s
-      enableExponentialBackoff: true
-      exponentialBackoffMultiplier: 2
-      
-        
 #debug
 logging:
   level:

@@ -54,6 +54,11 @@
 			<scope>runtime</scope>
 			<optional>true</optional>
 		</dependency>
+		<!-- Spring Boot Starter AMQP for RabbitMQ -->
+	    <dependency>
+	        <groupId>org.springframework.boot</groupId>
+	        <artifactId>spring-boot-starter-amqp</artifactId>
+	    </dependency>
 
 		<dependency>
 			<groupId>com.h2database</groupId>
@@ -83,7 +88,6 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
-
 	<build>
 		<plugins>
 			<plugin>
@@ -112,5 +116,4 @@
 			</plugin>
 		</plugins>
 	</build>
-
 </project>

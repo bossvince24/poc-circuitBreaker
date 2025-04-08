@@ -2,6 +2,7 @@ package com.ecms.employee.serviceImpl;
 
 import java.util.List;
 
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +21,8 @@ public class EmployeeServiceImpl implements EmployeeService {
 	
 	@Autowired
 	private EmployeeRepository repo;
+	@Autowired
+	private RabbitTemplate template;
 	
 	private static final String EMPLOYEE_SERVICEIMPL = "employeeServiceImpl";
 
@@ -36,9 +39,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 		return repo.save(employee);
 	}
 	
-
 	@Override
-	@Retry(name = "getEmployee", fallbackMethod = "getEmployeeFallback")
 	@CircuitBreaker(name = EMPLOYEE_SERVICEIMPL, fallbackMethod = "getEmployeeFallback")
 	public Employee getEmployeeById(Long id) {
 		// TODO Auto-generated method stub
@@ -49,6 +50,9 @@ public class EmployeeServiceImpl implements EmployeeService {
 	public Employee getEmployeeFallback(Long id, EmployeeNotFoundException exception) {
 //		System.out.println("Fallback triggered due to: " + exception.getMessage());
 		log.info("Fallback trigger due to: " + exception.getMessage());
+		
+		String errorMsg = String.format("Failed to fetch employee with ID %d. Reason: %s", id, exception.getMessage());
+		template.convertAndSend("employeeQueue", errorMsg);
 		return new Employee();
 	}
 }
